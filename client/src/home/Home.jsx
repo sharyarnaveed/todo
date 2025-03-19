@@ -1,4 +1,5 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect } from 'react'
 
 const home = () => {
 
@@ -9,6 +10,25 @@ const todos=[
   { id: 4, text: 'Update documentation', completed: false }
 ]
 
+
+const gettodos=async()=>
+{
+try {
+  const response=await axios.get("http://localhost:8080/todo/");
+  console.log(response.data);
+  
+} catch (error) {
+  console.log(error);
+  
+}
+}
+
+useEffect(()=>
+{
+  gettodos();
+})
+
+
   return (
     <>
     <main className=' h-[100vh] '>
@@ -18,7 +38,7 @@ const todos=[
     </div>
     <div className=' h-[85%] flex flex-col justify-center items-center'>
    <div className=' h-14 w-full mt-4 flex justify-center items-center'>
-    <input type="text" name="" id="" placeholder='Search' className=' w-[40%] h-[95%] text-[1.5rem] p-3 rounded-xl  outline outline-purple-500' />
+    <input type="text" name="" id="" placeholder='Search' className=' w-[40%] h-[70%] text-[1.2rem] p-3 rounded-xl  outline outline-purple-500' />
    </div>
 
    <div className=" mt-4 h-full w-full p-6 bg-purple-50 rounded-lg">
