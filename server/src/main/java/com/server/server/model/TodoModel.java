@@ -6,7 +6,15 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "todosave")
 public class TodoModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
+    @Column(name = "text")
+    String text;
+
+    @Column(name = "status")
+    String status;
 
     public Long getId() {
         return id;
@@ -32,17 +40,10 @@ public class TodoModel {
         this.status = status;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Column(name = "text")
-    String text;
-
-    @Column(name = "status")
-    String status;
 
 
+    public TodoModel() {
+    }
 
     public TodoModel(Long id, String text, String status) {
         this.id = id;
