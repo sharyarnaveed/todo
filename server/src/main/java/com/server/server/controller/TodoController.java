@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/todo")
 public class TodoController {
@@ -25,6 +25,7 @@ return Toservice.getdata();
             @PostMapping("/")
     public boolean savedata(@RequestBody TodoModel Thetodo)
             {
+                System.out.println(Thetodo);
  Toservice.savedata(Thetodo);
 return true;
             }
