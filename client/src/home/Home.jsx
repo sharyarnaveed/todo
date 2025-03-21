@@ -24,7 +24,7 @@ const home = () => {
         sendTodo
       );
       console.log(responce.data);
-resetField("task")
+      resetField("task")
 
       await gettodos();
     } catch (error) {
@@ -55,15 +55,15 @@ resetField("task")
   const updatetask = async (id, currentstate) => {
     try {
       const currentStateBoolean = currentstate === "true" || currentstate === true;
-      
+
       const responce = await axios.put(`http://localhost:8080/todo/${id}`, {
         status: !currentStateBoolean,
       });
       console.log(responce.data);
-       gettodos();
-      }
-     
-     catch (error) {
+      gettodos();
+    }
+
+    catch (error) {
       console.log("error in updating todo", error);
     }
   };
@@ -75,7 +75,7 @@ resetField("task")
   return (
     <>
       <main className=" h-[100vh] ">
-        <div className=" h-[85vh] overflow-y-auto">
+        <div className=" h-[95vh] overflow-y-auto">
           <div className=" h-[15%] flex justify-center items-center text-[3rem]">
             <h1>TODO TASK</h1>
           </div>
@@ -102,27 +102,24 @@ resetField("task")
                 {todos.map((todo) => (
                   <div
                     key={todo.id}
-                    className={`p-4 rounded-lg shadow-sm flex justify-between items-center ${
-                      todo.status=="true" ? "bg-purple-200" : "bg-white"
-                    }`}
+                    className={`p-4 rounded-lg shadow-sm flex justify-between items-center ${todo.status == "true" ? "bg-purple-200" : "bg-white"
+                      }`}
                   >
                     <span
-                      className={`${
-                        todo.status=="true"
+                      className={`${todo.status == "true"
                           ? "line-through text-purple-500"
                           : "text-gray-800"
-                      }`}
+                        }`}
                     >
                       {todo.text}
                     </span>
                     <div className="flex space-x-2">
                       <button
                         onClick={() => updatetask(todo.id, todo.status)}
-                        className={`px-3 py-1 rounded-md ${
-                          todo.status=="true"
+                        className={`px-3 py-1 rounded-md ${todo.status == "true"
                             ? "bg-purple-200 text-purple-700 hover:bg-purple-300"
                             : "bg-purple-600 text-white hover:bg-purple-700"
-                        } transition-colors`}
+                          } transition-colors`}
                       >
                         {todo.status ? "Undo" : "Complete"}
                       </button>
@@ -141,7 +138,6 @@ resetField("task")
           </div>
         </div>
 
-        <div className="border-2 border-green-500 h-[15vh]">bottom</div>
       </main>
     </>
   );
