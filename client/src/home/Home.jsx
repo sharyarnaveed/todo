@@ -4,30 +4,32 @@ import { useForm } from "react-hook-form";
 const home = () => {
   const [todos, setTodos] = useState([]);
   const {
+    resetField,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-const sendTodo={
-  text:"",
-  status:false
-}
 
-  const onSubmit = async(data) => {
-console.log(data.task);
-sendTodo.text=data.task;
-try {
-  
-const responce=await axios.post("http://localhost:8080/todo/",sendTodo);
-console.log(responce.data);
-await gettodos();
 
-} catch (error) {
-  console.log("error in saving todo",error);
-  
-}
+  const onSubmit = async (data) => {
+    const sendTodo = {
+      text: "",
+      status: false,
+    };
+    sendTodo.text = data.task;
+    try {
+      const responce = await axios.post(
+        "http://localhost:8080/todo/",
+        sendTodo
+      );
+      console.log(responce.data);
+resetField("task")
 
+      await gettodos();
+    } catch (error) {
+      console.log("error in saving todo", error);
+    }
   };
 
   const gettodos = async () => {
@@ -40,19 +42,31 @@ await gettodos();
     }
   };
 
-const deletetodo=async(id)=>{
-try {
-  
-const responce=await axios.delete(`http://localhost:8080/todo/${id}`);
-console.log(responce.data);
-await gettodos();
+  const deletetodo = async (id) => {
+    try {
+      const responce = await axios.delete(`http://localhost:8080/todo/${id}`);
+      console.log(responce.data);
+      await gettodos();
+    } catch (error) {
+      console.log("error in deleting todo", error);
+    }
+  };
 
-} catch (error) {
-  console.log("error in deleting todo",error);
-}
-}
-
-
+  const updatetask = async (id, currentstate) => {
+    try {
+      const currentStateBoolean = currentstate === "true" || currentstate === true;
+      
+      const responce = await axios.put(`http://localhost:8080/todo/${id}`, {
+        status: !currentStateBoolean,
+      });
+      console.log(responce.data);
+       gettodos();
+      }
+     
+     catch (error) {
+      console.log("error in updating todo", error);
+    }
+  };
 
   useEffect(() => {
     gettodos();
@@ -61,7 +75,7 @@ await gettodos();
   return (
     <>
       <main className=" h-[100vh] ">
-        <div className=" h-[85vh]">
+        <div className=" h-[85vh] overflow-y-auto">
           <div className=" h-[15%] flex justify-center items-center text-[3rem]">
             <h1>TODO TASK</h1>
           </div>
@@ -89,12 +103,12 @@ await gettodos();
                   <div
                     key={todo.id}
                     className={`p-4 rounded-lg shadow-sm flex justify-between items-center ${
-                      todo.completed ? "bg-purple-200" : "bg-white"
+                      todo.status=="true" ? "bg-purple-200" : "bg-white"
                     }`}
                   >
                     <span
                       className={`${
-                        todo.completed
+                        todo.status=="true"
                           ? "line-through text-purple-500"
                           : "text-gray-800"
                       }`}
@@ -103,17 +117,20 @@ await gettodos();
                     </span>
                     <div className="flex space-x-2">
                       <button
-                      onClick={()=>updatetask(todo.id)}
+                        onClick={() => updatetask(todo.id, todo.status)}
                         className={`px-3 py-1 rounded-md ${
-                          todo.completed
+                          todo.status=="true"
                             ? "bg-purple-200 text-purple-700 hover:bg-purple-300"
                             : "bg-purple-600 text-white hover:bg-purple-700"
                         } transition-colors`}
                       >
-                        {todo.completed ? "Undo" : "Complete"}
+                        {todo.status ? "Undo" : "Complete"}
                       </button>
 
-                      <button onClick={()=>deletetodo(todo.id)} className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors">
+                      <button
+                        onClick={() => deletetodo(todo.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors"
+                      >
                         Delete
                       </button>
                     </div>
